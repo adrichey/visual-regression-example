@@ -3,12 +3,15 @@ import assert from 'node:assert';
 import { test, suite, before, after, beforeEach, afterEach } from 'node:test';
 import testScenarios from '../../config.js';
 import { compareImages, takeTestScreenshot } from './imageComparison.js';
+import buildReport from './buildReport.js';
+
+const maxAllowedDiffPixels = 0;
+const testsPassed = [];
+const testsFailed = [];
 
 let browser;
 let context;
 let page;
-let numOfTestsPassed;
-let numOfTestsFailed;
 
 suite('Visual Regression Suite', async () => {
     before(async () => {
@@ -20,6 +23,7 @@ suite('Visual Regression Suite', async () => {
 
     after(async () => {
         browser.close();
+        buildReport({ testsPassed, testsFailed });
     });
 
     beforeEach(async () => {
@@ -53,9 +57,14 @@ suite('Visual Regression Suite', async () => {
 
                 const numOfDiffPixels = compareImages(screenshotName);
 
-                // TODO: Create HTML page with the output for people to look at
+                if (numOfDiffPixels === maxAllowedDiffPixels) {
+                    testsPassed.push({ testName, screenshotName });
+                } else {
+                    testsFailed.push({ testName, screenshotName });
+                }
+
                 // TODO: Add means to approve/deny reference image updates
-                assert.equal(numOfDiffPixels, 0, 'Expected pixel difference of test and reference images to be zero');
+                assert.equal(numOfDiffPixels, maxAllowedDiffPixels, 'Expected pixel difference of test and reference images to be zero');
             });
         }
     }

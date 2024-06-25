@@ -130,5 +130,6 @@ dist
 .pnp.*
 
 # Visual Regression
-src/testImages/*
-src/diffImages/*
+src/summary/diffImages/*
+src/summary/testImages/*
+src/summary/index.html
