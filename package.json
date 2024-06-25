@@ -4,7 +4,8 @@
     "author": "closuresandcoffee <1534554+closuresandcoffee@users.noreply.github.com>",
     "type": "module",
     "scripts": {
-        "start": "node src/index.js"
+        "start": "node src/modules/server/index.js",
+        "test": "node src/modules/visualRegressionSuite/index.js"
     },
     "dependencies": {
         "pixelmatch": "5.3.0",

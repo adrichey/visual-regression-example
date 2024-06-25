@@ -4,15 +4,15 @@ import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
 
 const getTestImagesPath = (fileToResolve = '') => {
-    return path.resolve(import.meta.dirname, `../testImages/${fileToResolve}`);
+    return path.resolve(import.meta.dirname, `../../testImages/${fileToResolve}`);
 };
 
 const getReferenceImagesPath = (fileToResolve = '') => {
-    return path.resolve(import.meta.dirname, `../referenceImages/${fileToResolve}`);
+    return path.resolve(import.meta.dirname, `../../referenceImages/${fileToResolve}`);
 };
 
 const getDiffImagesPath = (fileToResolve = '') => {
-    return path.resolve(import.meta.dirname, `../diffImages/${fileToResolve}`);
+    return path.resolve(import.meta.dirname, `../../diffImages/${fileToResolve}`);
 };
 
 export const takeTestScreenshot = async (page, screenshotName) => {

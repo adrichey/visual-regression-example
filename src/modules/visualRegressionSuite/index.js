@@ -1,17 +1,16 @@
 import puppeteer from 'puppeteer';
 import assert from 'node:assert';
 import { test, suite, before, after, beforeEach, afterEach } from 'node:test';
-import startServer from './modules/server/index.js';
-import testScenarios from './config.js';
-import { compareImages, takeTestScreenshot } from './modules/imageComparison.js';
+import testScenarios from '../../config.js';
+import { compareImages, takeTestScreenshot } from './imageComparison.js';
 
 let browser;
 let context;
 let page;
+let numOfTestsPassed;
+let numOfTestsFailed;
 
 suite('Visual Regression Suite', async () => {
-    await startServer();
-
     before(async () => {
         browser = await puppeteer.launch({
             executablePath: '/usr/bin/chromium',
