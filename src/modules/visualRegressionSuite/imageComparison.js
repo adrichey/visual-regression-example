@@ -18,11 +18,18 @@ export const getDiffImagesPath = (fileToResolve = '') => {
 };
 
 export const takeTestScreenshot = async (page, screenshotName) => {
-    const screenshotPath = getTestImagesPath(screenshotName);
+    const testImagePath = getTestImagesPath(screenshotName);
     await page.screenshot({
-        path: screenshotPath,
+        path: testImagePath,
         type: 'png',
     });
+
+    const referenceImagePath = getReferenceImagesPath(screenshotName);
+    try {
+        fs.accessSync(referenceImagePath, fs.constants.F_OK);
+    } catch (err) {
+        fs.copyFileSync(testImagePath, referenceImagePath);
+    }
 };
 
 export const compareImages = (screenshotName) => {
