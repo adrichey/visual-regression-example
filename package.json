@@ -1,0 +1,12 @@
+{
+    "name": "cnc-node-starter-template",
+    "version": "1.0.0",
+    "author": "closuresandcoffee <1534554+closuresandcoffee@users.noreply.github.com>",
+    "type": "module",
+    "scripts": {
+        "start": "node src/index.js"
+    },
+    "dependencies": {
+        "puppeteer": "22.10.0"
+    }
+}

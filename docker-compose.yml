@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "8080:8000"
+    env_file: .env
+    networks:
+        app_net:
+            ipv4_address: ${IP_NODE_SERVER}
+    command: npm run start
+networks:
+    app_net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: ${IP_SUBNET}
