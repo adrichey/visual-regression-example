@@ -63,7 +63,6 @@ suite('Visual Regression Suite', async () => {
                     testsFailed.push({ testName, screenshotName });
                 }
 
-                // TODO: Add means to approve/deny reference image updates
                 assert.equal(numOfDiffPixels, maxAllowedDiffPixels, 'Expected pixel difference of test and reference images to be zero');
             });
         }

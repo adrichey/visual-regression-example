@@ -17,6 +17,20 @@ const headerTemplate = `<!doctype html>
                 border-width: 1px 0;
                 box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
             }
+
+            pre {
+                display: inline-block;
+                padding: 9.5px;
+                margin: 0 0 10px;
+                font-size: 13px;
+                line-height: 1.42857143;
+                color: #333;
+                word-break: break-all;
+                word-wrap: break-word;
+                background-color: #f5f5f5;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
         </style>
     </head>
     <body>
@@ -44,6 +58,12 @@ const createTestBlockHTML = (testName, screenshotName, success = true) => {
                 <div class="feature col">
                     <h3 class="fs-2 text-body-emphasis">Diff</h3>
                     <img class="img-fluid border" src="diffImages/${(screenshotName)}">
+                </div>
+            </div>
+            <div class="row row-cols-12">
+                <div class="feature col">
+                    <p>To overwrite this reference with the test image, run the following command:</p>
+                    <pre>docker exec &lt;id_or_name_of_docker_container&gt; npm run vr-approve -- ${screenshotName}</pre>
                 </div>
             </div>
         </div>
@@ -74,10 +94,16 @@ const buildReport = (options = { testsPassed: [], testsFailed: [] }) => {
     const filePath = path.resolve(import.meta.dirname, '../../summary/index.html');
 
     const header = `
-        <div class="row g-4 py-5 row-cols-12">
+        <div class="row g-4 pt-5 row-cols-12">
             <div class="feature col text-center">
                 <h1 id="main-header">Visual Regression Summary</h1>
                 <h2><span class="text-success">${testsPassed.length} passed</span> | <span class="text-danger">${testsFailed.length} failed</span></h2>
+            </div>
+        </div>
+        <div class="row g-4 py-5 row-cols-12">
+            <div class="feature col text-center">
+                <p>To overwrite all current references with their test images, run the following command:</p>
+                <pre>docker exec &lt;id_or_name_of_docker_container&gt; npm run vr-approve -- --all</pre>
             </div>
         </div>
         <div class="b-example-divider"></div>
