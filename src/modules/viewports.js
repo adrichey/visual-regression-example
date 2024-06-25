@@ -8,10 +8,10 @@ const defaultViewport = {
     name: 'default',
     deviceScaleFactor: 1,
     hasTouch: false,
-    height: 1920,
+    height: 1080,
     isLandscape: false,
     isMobile: false,
-    width: 1080,
+    width: 1920,
 };
 
 const desktop = Object.assign({}, defaultViewport, {

@@ -5,9 +5,8 @@ const testScenarios = [
     {
         description: "Localhost - Index Page",
         viewports: [...viewports],
-        url: 'http://0.0.0.0:8000', // TODO: GRAB THIS FROM ENV
+        url: 'http://0.0.0.0:8000',
         waitForElements: ['#main-header'],
-        // TODO: Improve this so it can run scripts in addition to just visiting a page and wait on a selector.
     },
     {
         description: "Localhost - About Page",

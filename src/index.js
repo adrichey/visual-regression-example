@@ -1,48 +1,63 @@
 import puppeteer from 'puppeteer';
 import assert from 'node:assert';
-import { test, suite } from 'node:test';
+import { test, suite, before, after, beforeEach, afterEach } from 'node:test';
 import startServer from './modules/server/index.js';
 import testScenarios from './config.js';
+import { compareImages, takeTestScreenshot } from './modules/imageComparison.js';
 
-const filenameRegex = /^[\w-_]+$/;
+let browser;
+let context;
+let page;
 
 suite('Visual Regression Suite', async () => {
     await startServer();
 
-    const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/chromium',
-        args: ['--no-sandbox'],
+    before(async () => {
+        browser = await puppeteer.launch({
+            executablePath: '/usr/bin/chromium',
+            args: ['--no-sandbox'],
+        });
     });
 
-    testScenarios.forEach((scenario, index) => {
-        const testInfo = JSON.stringify(scenario);
+    after(async () => {
+        browser.close();
+    });
 
-        scenario.viewports.forEach((viewport) => {
+    beforeEach(async () => {
+        context = await browser.createBrowserContext();
+        page = await context.newPage();
+    });
+
+    afterEach(async () => {
+        context.close();
+    });
+
+    for await (const scenario of testScenarios) {
+        for await (const viewport of scenario.viewports) {
             const testName = `${scenario.description} - ${viewport.name}`;
 
             test(testName, async () => {
-                const context = await browser.createBrowserContext();
-                const page = await context.newPage();
+                await page.setViewport(viewport);
     
                 await page.goto(scenario.url);
-    
-                // TODO: FIX THIS
-                // scenario.waitForElements.forEach(async (selector) => {
-                //     await page.waitForSelector(selector, { visible: true });
-                // });
+
+                for await (const selector of scenario.waitForElements) {
+                    page.waitForSelector(selector);
+                }
 
                 const screenshotName = testName
                     .toLowerCase()
                     .replace(/\s/g, '_')
                     .replace(/[^\w-_]/g, '') + '.png';
 
-                // TODO: Get path and then upload to the test images directory
-                console.log(`screenshotName: "${screenshotName}"`);
-                
-                await context.close();
+                await takeTestScreenshot(page, screenshotName);
 
-                assert.equal(1, 1);
+                const numOfDiffPixels = compareImages(screenshotName);
+
+                // TODO: Create HTML page with the output for people to look at
+                // TODO: Add means to approve/deny reference image updates
+                assert.equal(numOfDiffPixels, 0, 'Expected pixel difference of test and reference images to be zero');
             });
-        });
-    });
+        }
+    }
 });
